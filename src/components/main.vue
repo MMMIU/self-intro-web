@@ -1,7 +1,5 @@
 <template>
-  <div class="main">
-    <a href="http://www.quickconnect.to/MMMIU">link</a>
-  </div>
+  <div class="main"></div>
 </template>
 
 <script>

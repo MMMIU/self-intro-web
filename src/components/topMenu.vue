@@ -2,9 +2,24 @@
   <div class="topMenu">
     <ul>
       <li>
-        <div>
-          <a href>关于我</a>
-        </div>
+        <a href="http://www.baidu.com">
+          <div>关于我</div>
+        </a>
+      </li>
+      <li>
+        <a href="http://www.baidu.com">
+          <div>关于我</div>
+        </a>
+      </li>
+      <li>
+        <a href="http://www.baidu.com">
+          <div>关于我</div>
+        </a>
+      </li>
+      <li>
+        <a href="http://www.baidu.com">
+          <div>关于我</div>
+        </a>
       </li>
     </ul>
   </div>
@@ -26,33 +41,33 @@ export default {
   position: absolute;
   height: 45px;
   width: 100%;
-  background-color: black;
+  transition: 0.3s;
+}
+.topMenu:hover {
+  background-color: #454545;
+  transition: 0.3s;
 }
 .topMenu ul {
   height: 100%;
-  background-color: gray;
 }
 .topMenu ul li {
-  display: inline;
-  line-height: 100%;
+  float: left;
 }
-.topMenu ul li div {
+.topMenu ul li a div {
   height: 100%;
-  width: 100%;
+  width: 75px;
+  line-height: 45px;
+}
+.topMenu ul li a div:hover {
+  color: #66cae2;
+  transition: 0.3s;
 }
 .topMenu ul li a {
-  height: 100%;
-  width: 100%;
-  background-color: green;
-  line-height: 100%;
   color: aliceblue;
+  margin-top: 50px;
 }
-a:hover {
-  transition: 0.3s;
-  color: #66cae2;
-}
-a:link,
-a:visited {
+.topMenu ul li a:link,
+.topMenu ul li a:visited {
   font: Tahoma, Helvetica, Arial, "宋体", sans-serif;
   font-weight: 300;
   font-size: 15px;
