@@ -1,28 +1,33 @@
 <template>
-  <div id="app">
-    <topMenu></topMenu>
-    <router-view />
+  <div>
+    <topMenu @innerHeight="changeHeight"></topMenu>
+    <router-view :totalHeight="innerHeight"></router-view>
   </div>
 </template>
-
 <script>
 import topMenu from "./components/topMenu";
 export default {
+  name: "dhsaodhao",
+  data() {
+    return {
+      innerHeight: window.innerHeight
+    };
+  },
   components: {
     topMenu
   },
-  name: "App"
+  methods: {
+    changeHeight: function(data1) {
+      this.innerHeight = data1;
+    }
+  }
 };
 </script>
-
 <style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  height: 2000px;
-  background-color: black;
+  min-width: 700px;
 }
 </style>
