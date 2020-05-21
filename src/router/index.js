@@ -30,6 +30,5 @@ export default new Router({
       path: '/thanks',
       component: thanks
     }
-
   ]
 })

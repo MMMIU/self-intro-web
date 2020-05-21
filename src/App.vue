@@ -1,33 +1,29 @@
 <template>
-  <div>
-    <topMenu @innerHeight="changeHeight"></topMenu>
-    <router-view :totalHeight="innerHeight"></router-view>
+  <div
+    id="app"
+    oncontextmenu="return false"
+    onselectstart="return false"
+    ondragstart="return false"
+    onbeforecopy="return false"
+    oncopy="document.selection.empty()"
+    onselect="document.selection.empty()"
+  >
+    <home></home>
+    <webFooter></webFooter>
   </div>
 </template>
 <script>
-import topMenu from "./components/topMenu";
+import home from "./components/home";
+import webFooter from "./components/footer";
 export default {
-  name: "dhsaodhao",
+  name: "app",
   data() {
-    return {
-      innerHeight: window.innerHeight
-    };
+    return {};
   },
   components: {
-    topMenu
+    home,
+    webFooter
   },
-  methods: {
-    changeHeight: function(data1) {
-      this.innerHeight = data1;
-    }
-  }
+  mounted() {}
 };
 </script>
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-width: 700px;
-}
-</style>

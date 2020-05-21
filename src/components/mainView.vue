@@ -12,26 +12,28 @@
         ></div>
       </transition>
     </div>
-    <div class="counter">中国时间：{{date}}</div>
-    <a href="mailto:1822157830@qq.com?subject=反馈：">
-      <div class="contact">
-        联系方式：1822157830@qq.com
-        <br />©Yifei Miao, 2020
-      </div>
-    </a>
+    <div class="counter">
+      不支持部分老式浏览器
+      <br />
+      中国时间：{{date}}
+    </div>
+    <div class="contact">
+      <a href="mailto:1822157830@qq.com?subject=反馈：">联系方式：1822157830@qq.com</a>
+      <br />
+      <router-link to="/thanks" target="view_window">
+        <a>
+          <div>感谢</div>
+        </a>
+      </router-link>
+    </div>
     <div class="logoBox">
       <div class="myLogo"></div>
     </div>
-    <h2 class="name">Yifei Miao</h2>
+    <h2 class="name">MMMIU</h2>
   </div>
 </template>
 
 <script>
-import image0 from "../../static/img/邂逅.jpg";
-import image1 from "../../static/img/上海.jpg";
-import image2 from "../../static/img/人马共辉.jpg";
-import image3 from "../../static/img/天池.jpg";
-import image4 from "../../static/img/龙井早春.jpg";
 export default {
   components: {},
   name: "mainView",
@@ -43,7 +45,7 @@ export default {
       scroll: 0,
       index: 0,
       index2: 0,
-      covers: [image0, image1, image2, image3, image4],
+      covers: [""],
       show: false,
       firstTime: true
     };
@@ -56,16 +58,18 @@ export default {
     timer: function() {
       setInterval(() => {
         this.firstTime = false;
-        this.index2 = this.index;
-        this.index = (this.index + 1) % this.covers.length;
         this.changeImg(this.index);
       }, 10000);
     },
     changeImg: function() {
       this.show = false;
+      this.index2 = this.index;
+      this.index = (this.index + 1) % this.covers.length;
       setTimeout(() => {
         this.show = true;
       }, 100);
+      let preload = new Image();
+      preload.src = this.covers[(this.index + 1) % this.covers.length];
     },
     realtime: function() {
       const that = this;
@@ -96,6 +100,16 @@ export default {
         ":" +
         ("0" + date.getSeconds()).slice(-2)
       );
+    },
+    getImgArr: function() {
+      this.covers.length = 0;
+      const files = require
+        .context("../../static/media/images/mainViewCover", false, /.jpg$/)
+        .keys();
+      for (let item of files) {
+        var tmp = item.split("./");
+        this.covers.push("../../static/media/images/mainViewCover/" + tmp[1]);
+      }
     }
   },
   props: ["totalHeight"],
@@ -107,9 +121,14 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", this.menu);
+    this.getImgArr();
     this.timer();
     this.show = true;
     this.realtime();
+  },
+  beforeCreate() {
+    let image = new Image();
+    image.src = 'url("../../static/media/images/mainViewCover/上海.jpg")';
   }
 };
 </script>
@@ -145,7 +164,7 @@ export default {
   width: 100px;
   height: 100px;
   margin: 0 auto;
-  background-image: url("../../static/img/logo3.png");
+  background-image: url("../../static/img/selfie.jpg");
   background-size: cover;
   background-color: white;
   border-radius: 50%;
@@ -153,7 +172,7 @@ export default {
 }
 .counter {
   float: left;
-  margin-top: 70px;
+  margin-top: 55px;
   margin-left: 10px;
   font-size: 13px;
   color: #aaaaaa;
@@ -184,6 +203,15 @@ export default {
 }
 .line1 {
   margin: 21px 20px auto 20px;
+}
+a:link,
+a:visited {
+  color: #aaaaaa;
+  text-decoration: none;
+  transition: 0.3s;
+}
+a:hover {
+  color: #66cae2;
 }
 .fade-enter-active {
   transition: all 0.5s ease;

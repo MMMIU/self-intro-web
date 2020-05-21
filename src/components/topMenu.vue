@@ -1,5 +1,5 @@
 <template>
-  <div class="topMenu">
+  <div id="topMenu">
     <div class="leftMenu" @mouseover="pullLeftMenuPanel" @mouseout="foldLeftMenuPanel">
       <img
         class="leftmenulogo"
@@ -18,10 +18,10 @@
         <ul class="toolsNav">
           <li>
             <a href target="view_window">
-              <div>摄影</div>
+              <div>计算器（即将可用）</div>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a href target="view_window">
               <div>摄影</div>
             </a>
@@ -35,7 +35,7 @@
             <a href target="view_window">
               <div>摄影</div>
             </a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </div>
@@ -61,7 +61,7 @@
           </a>
         </router-link>
       </li>
-      <li>
+      <!-- <li>
         <router-link to="/aboutme" target="view_window">
           <a>
             <div>编程</div>
@@ -74,44 +74,98 @@
             <div>文章</div>
           </a>
         </router-link>
-      </li>
-      <li>
+      </li>-->
+      <!-- <li>
         <router-link to="/thanks" target="view_window">
           <a>
             <div>感谢</div>
           </a>
         </router-link>
-      </li>
+      </li>-->
     </ul>
     <a href="http://www.mmmiu.top:5000" target="view_window">
       <div class="manager" title="管理员"></div>
     </a>
-    <div class="playListPane" @mouseover="showPlayList(true)" @mouseout="showPlayList(false)">
-      <div class="playListButtonBox">
+    <div
+      class="musicPane"
+      :class="{'musicPaneHeight':displayPlayList}"
+      @mouseleave="showPlayList(false)"
+    >
+      <div class="musicControlsPane">
+        <div class="playListButtonBox" @mouseenter="showPlayList(true)">
+          <img
+            id="playListButton"
+            src="../../static/img/playListB.png"
+            ondragstart="return false"
+            onselectstart="return false"
+          />
+        </div>
         <img
-          id="playListButton"
-          src="../../static/img/playListB.png"
+          id="nextMusic"
+          src="../../static/img/nextMusic.png"
+          class="musicControl"
+          v-on:click="nextMusic"
+          @mouseover="onNxtBtn(true)"
+          @mouseout="onNxtBtn(false)"
           ondragstart="return false"
           onselectstart="return false"
+          title="下一首"
+        />
+        <img
+          id="playPause"
+          src="../../static/img/start.png"
+          class="musicControl"
+          v-on:click="spMusic()"
+          @mouseover="onPlayBtn(true)"
+          @mouseout="onPlayBtn(false)"
+          ondragstart="return false"
+          onselectstart="return false"
+          :title="'当前: '+getMusicTitle(arr[musicIndex])"
+        />
+        <img
+          id="previousMusic"
+          src="../../static/img/previousMusic.png"
+          class="musicControl"
+          v-on:click="previousMusic"
+          @mouseover="onPreBtn(true)"
+          @mouseout="onPreBtn(false)"
+          ondragstart="return false"
+          onselectstart="return false"
+          title="上一首"
+        />
+        <img
+          id="cycleControl"
+          src="../../static/img/cycle.png"
+          class="musicControl"
+          v-on:click="cycleControl()"
+          @mouseover="onCycBtn(true)"
+          @mouseout="onCycBtn(false)"
+          ondragstart="return false"
+          onselectstart="return false"
+          style="margin-right:5px;"
+        />
+        <img
+          id="randomControl"
+          src="../../static/img/random.png"
+          class="musicControl"
+          v-on:click="randomControl()"
+          ondragstart="return false"
+          onselectstart="return false"
+          style="margin-right:5px;height:25px;margin-top:11px;"
+          title="随机播放"
         />
       </div>
       <div
         class="playList"
         :class="{'turnOnPlayList':displayPlayList,'disableDiv':!displayPlayList}"
       >
-        <audio id="audio" type="audio/mpeg" controls :title="musicTitle">浏览器不支持播放器</audio>
-        <span>NEXT:</span>
+        <audio id="audio" type="audio/mpeg" controls preload>浏览器不支持播放器</audio>
+        <span>当前:</span>
+        <ul id="currentMusic" class="playListStyle"></ul>
+        <span>播放列表:</span>
+        <ul id="playListContent" class="playListStyle"></ul>
       </div>
     </div>
-    <img
-      id="musicControl"
-      src="../../static/img/start.png"
-      v-on:click="spMusic()"
-      @mouseover="onPlayBtn(true)"
-      @mouseout="onPlayBtn(false)"
-      ondragstart="return false"
-      onselectstart="return false"
-    />
   </div>
 </template>
 
@@ -124,15 +178,14 @@ export default {
       leftMenuPanelHeight: 0,
       leftMenuPanelPosition: -205,
       lightOn: false,
+      previousMusicIndex: 0,
       musicIndex: 0,
-      arr: [
-        "../../static/media/伦桑 - 烟雨行舟.mp3",
-        "../../static/media/MMMIU - 江南诗意曲（伴奏）.mp3"
-      ],
-      musicTitle: "",
+      arr: [""],
       displayPlayList: false,
       musicPlaying: false,
-      onPlayButton: false
+      onPlayButton: false,
+      single: false,
+      random: false
     };
   },
   methods: {
@@ -164,10 +217,27 @@ export default {
         music.play();
       }
     },
+    getMusicArr: function() {
+      this.arr.length = 0;
+      const files = require
+        .context("../../static/media/music", false, /.mp3$/)
+        .keys();
+      for (let item of files) {
+        var tmp = item.split("./");
+        this.arr.push(" ../../static/media/music/" + tmp[1]);
+      }
+      this.arr.sort(function(a, b) {
+        return (a + "").localeCompare(b + "");
+      });
+      this.previousMusicIndex = this.arr.length - 1;
+    },
     initMusic: function() {
       var music = document.getElementById("audio");
+      music.controls = true;
+      music.loop = false;
       music.volume = 0.3;
       music.controlsList = "nodownload";
+      music.src = this.arr[this.musicIndex];
       const that = this;
       music.addEventListener("play", function() {
         that.musicPlaying = true;
@@ -177,27 +247,89 @@ export default {
         that.musicPlaying = false;
         that.changePlayIcon();
       });
-      this.playListControl();
+      music.addEventListener("ended", function() {
+        this.previousMusicIndex = this.musicIndex;
+        if (that.single) {
+          music.src = that.arr[that.musicIndex];
+          music.play();
+        } else {
+          if (that.random) {
+            that.musicIndex = this.getRandomIndex();
+          } else {
+            that.musicIndex = (that.musicIndex + 1) % that.arr.length;
+          }
+          music.src = that.arr[that.musicIndex];
+          music.play();
+        }
+      });
+      this.updatePlayList();
     },
-    playListControl: function() {
-      var music = document.getElementById("audio");
-      music.controls = true;
-      music.src = this.arr[this.musicIndex];
-      music.addEventListener("ended", playEndedHandler, false);
-      music.loop = false;
-      this.changeMusicTitle();
+    updatePlayList: function() {
+      var current = document.getElementById("currentMusic");
+      current.innerHTML = "";
+      this.addChildToPlayList(this.musicIndex, true, current);
+      var list = document.getElementById("playListContent");
+      list.innerHTML = "";
+      var gray = true;
+      for (var i = this.musicIndex + 1; i < this.arr.length; i++) {
+        this.addChildToPlayList(i, gray, list);
+        gray = !gray;
+      }
+      for (var i = 0; i < this.musicIndex; i++) {
+        this.addChildToPlayList(i, gray, list);
+        gray = !gray;
+      }
+      var item = document.createElement("li");
+      item.className = gray
+        ? "playListItem grayItem"
+        : "playListItem whiteItem";
+      var div = document.createElement("div");
+      div.innerText = "- - - - - -END- - - - - -";
+      item.appendChild(div);
+      list.appendChild(item);
+    },
+    addChildToPlayList: function(index, gray, list) {
+      var item = document.createElement("li");
+      item.className = gray
+        ? "playListItem grayItem"
+        : "playListItem whiteItem";
+      var div = document.createElement("div");
+      div.innerText = this.getMusicTitle(this.arr[index]);
+      div.indexNumber = index;
+      item.appendChild(div);
       const that = this;
-      function playEndedHandler() {
-        that.musicIndex = (that.musicIndex + 1) % that.arr.length;
-        music.src = that.arr[that.musicIndex];
-        that.changeMusicTitle();
-        music.play();
+      item.addEventListener("click", function(e) {
+        that.switchMusic(e.target.indexNumber);
+      });
+      list.appendChild(item);
+    },
+    switchMusic: function(index) {
+      this.musicIndex = index;
+      var music = document.getElementById("audio");
+      music.src = this.arr[this.musicIndex];
+      document.title = this.getMusicTitle(this.arr[this.musicIndex]);
+      music.play();
+    },
+    nextMusic: function() {
+      this.previousMusicIndex = this.musicIndex;
+      if (this.random) {
+        this.musicIndex = this.getRandomIndex();
+        this.switchMusic(this.musicIndex);
+      } else {
+        this.musicIndex = (this.musicIndex + 1) % this.arr.length;
       }
     },
-    changeMusicTitle: function() {
-      var tmp = this.arr[this.musicIndex].split("/");
+    previousMusic: function() {
+      this.musicIndex = this.previousMusicIndex;
+      this.previousMusicIndex =
+        this.musicIndex == 0 ? this.arr.length - 1 : this.musicIndex - 1;
+      this.switchMusic(this.musicIndex);
+    },
+    getMusicTitle: function(source) {
+      var tmp = source.split("/");
       var tmp2 = tmp[tmp.length - 1].split(".");
-      this.musicTitle = tmp2[0];
+      var tmp3 = tmp2[0].split(" - ");
+      return tmp3[1] + " --- " + tmp3[0];
     },
     showPlayList: function(option) {
       var button = document.getElementById("playListButton");
@@ -212,8 +344,67 @@ export default {
       this.onPlayButton = !this.onPlayButton;
       this.changePlayIcon();
     },
+    onPreBtn: function(option) {
+      var button = document.getElementById("previousMusic");
+      if (option) {
+        button.src = "../../static/img/previousMusicC.png";
+      } else {
+        button.src = "../../static/img/previousMusic.png";
+      }
+    },
+    onNxtBtn: function(option) {
+      var button = document.getElementById("nextMusic");
+      if (option) {
+        button.src = "../../static/img/nextMusicC.png";
+      } else {
+        button.src = "../../static/img/nextMusic.png";
+      }
+    },
+    onRdmBtn: function(option) {
+      var button = document.getElementById("randomControl");
+      if (option) {
+        button.src = "../../static/img/randomC.png";
+      } else {
+        button.src = "../../static/img/random.png";
+      }
+    },
+    onCycBtn: function(option) {
+      var button = document.getElementById("cycleControl");
+      if (option) {
+        if (this.single) {
+          button.src = "../../static/img/singleC.png";
+          button.title = "单曲循环";
+        } else {
+          button.src = "../../static/img/cycleC.png";
+          button.title = "列表循环";
+        }
+      } else {
+        if (this.single) {
+          button.src = "../../static/img/single.png";
+          button.title = "单曲循环";
+        } else {
+          button.src = "../../static/img/cycle.png";
+          button.title = "列表循环";
+        }
+      }
+    },
+    cycleControl: function() {
+      this.single = !this.single;
+      this.onCycBtn(true);
+    },
+    randomControl: function() {
+      this.random = !this.random;
+      this.onRdmBtn(this.random);
+    },
+    getRandomIndex: function() {
+      var tmp = Math.floor(Math.random() * this.arr.length);
+      while (tmp == this.musicIndex) {
+        tmp = Math.floor(Math.random() * this.arr.length);
+      }
+      return tmp;
+    },
     changePlayIcon: function() {
-      var button = document.getElementById("musicControl");
+      var button = document.getElementById("playPause");
       if (this.onPlayButton) {
         if (!this.musicPlaying) {
           button.src = "../../static/img/startC.png";
@@ -233,15 +424,21 @@ export default {
   mounted: function() {
     this.leftMenuPanelHeight = window.innerHeight - 46;
     this.windowResize();
+    this.getMusicArr();
     this.initMusic();
+  },
+  watch: {
+    musicIndex(val, oldVal) {
+      this.updatePlayList();
+    }
   }
 };
 </script>
 
-<style scoped>
-.topMenu {
+<style>
+#topMenu {
   z-index: 99999;
-  position: absolute;
+  position: fixed;
   top: 0px;
   height: 45px;
   width: 100%;
@@ -252,11 +449,11 @@ export default {
   min-width: 800px;
   user-select: none;
 }
-.topMenu:hover {
+#topMenu:hover {
   background-color: whitesmoke;
   transition: 0.3s;
 }
-.leftMenu {
+#topMenu .leftMenu {
   width: 45px;
   height: 45px;
   position: absolute;
@@ -266,41 +463,41 @@ export default {
   border-bottom: 1px solid rgb(64, 69, 74);
   transition-duration: 1s;
 }
-.leftmenulogo {
-  height: 45.5px;
+#topMenu .leftmenulogo {
+  height: 45px;
   width: auto;
 }
-.light {
+#topMenu .light {
   background-color: lightblue;
   transition: 0.3s;
 }
-.mainNav {
+#topMenu .mainNav {
   list-style: none;
   position: absolute;
   left: 55px;
 }
-.mainNav li {
+#topMenu .mainNav li {
   float: left;
   text-align: center;
 }
-.mainNav li div {
+#topMenu .mainNav li div {
   height: 100%;
   width: 75px;
   line-height: 45px;
 }
-a div:hover {
+#topMenu a div:hover {
   color: #66cae2;
   transition: 0.3s;
 }
-a:link,
-a:visited {
+#topMenu a:link,
+#topMenu a:visited {
   font-weight: 300;
   font-size: 15px;
   transition: 0.3s;
   color: black;
   text-decoration: none;
 }
-.leftMenuPanel {
+#topMenu .leftMenuPanel {
   position: absolute;
   width: 200px;
   background-color: whitesmoke;
@@ -310,35 +507,35 @@ a:visited {
   border-bottom: 1px solid rgb(64, 69, 74);
   transition-delay: 0.2s;
 }
-.leftMenuPanel:hover {
+#topMenu .leftMenuPanel:hover {
   background-color: whitesmoke;
   transition: 0.1s;
 }
-.leftMenuPanel h4 {
+#topMenu .leftMenuPanel h4 {
   text-align: left;
   margin-left: 10px;
   color: black;
 }
-.line {
+#topMenu .line {
   border: none;
   outline: none;
   height: 1px;
   background-color: rgb(100, 100, 100);
   width: 90%;
 }
-.line2 {
+#topMenu .line2 {
   width: 100%;
 }
-.toolsNav {
+#topMenu .toolsNav {
   list-style: none;
   padding-top: 10px;
 }
-.toolsNav li a div {
+#topMenu .toolsNav li a div {
   text-align: left;
   padding-left: 15px;
   line-height: 50px;
 }
-.manager {
+#topMenu .manager {
   float: right;
   background-image: url("../../static/img/manager.png");
   background-position: center;
@@ -348,34 +545,46 @@ a:visited {
   height: 45px;
   transition: 0.3s;
 }
-.manager:hover {
+#topMenu .manager:hover {
   background-image: url("../../static/img/managerC.png");
 }
-audio {
+#topMenu audio {
   height: 45px;
   width: 100%;
 }
-audio:focus {
+#topMenu audio:focus {
   outline: none;
 }
-.playListPane {
+#topMenu .playListButtonBox {
   float: right;
   transition: 0.3s;
-}
-.playListButtonBox {
   height: 45px;
   width: 45px;
 }
 #playListButton {
   cursor: pointer;
-  float: right;
-  margin-top: 5px;
+  margin: 5px 5px;
   height: 35px;
   width: 35px;
 }
-.playList {
+#topMenu .musicPane {
+  width: 300px;
+  float: right;
+  margin-top: 46px;
+}
+#topMenu .musicPaneHeight {
+  height: 301px;
+}
+#topMenu .musicControlsPane {
   position: absolute;
-  margin-left: -230px;
+  height: 46px;
+  width: 300px;
+  top: 0;
+  margin-left: 0;
+  z-index: -9999;
+}
+#topMenu .playList {
+  position: absolute;
   top: 46px;
   width: 300px;
   height: 300px;
@@ -383,23 +592,70 @@ audio:focus {
   opacity: 0;
   transition: 0.5s;
   transition-delay: 0.3s;
+  box-shadow: 1px 1px 5px rgb(100, 100, 100);
 }
-.disableDiv {
+#playListContent {
+  width: 100%;
+  height: 250px;
+}
+#currentMusic {
+  width: 300px;
+}
+#topMenu .playListItem:hover {
+  color: pink;
+}
+#topMenu .disableDiv {
   pointer-events: none;
 }
-.playList span {
+#topMenu .playList span {
+  float: left;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  width: 100%;
+  height: 14px;
   margin-left: 10px;
-  line-height: 15px;
+  line-height: 14px;
 }
-.turnOnPlayList {
+#topMenu .turnOnPlayList {
   opacity: 1;
   display: inline;
 }
-#musicControl {
+#topMenu .musicControl {
   float: right;
   height: 35px;
   width: 35px;
   margin-top: 5px;
   cursor: pointer;
+}
+#topMenu .playListStyle {
+  width: 100%;
+  word-wrap: normal;
+  overflow-x: hidden;
+  overflow-y: auto;
+  list-style: none;
+  border-top: 1px solid black;
+}
+#topMenu .playListItem {
+  width: 300px;
+  height: auto;
+  line-height: 30px;
+  padding-left: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+#topMenu .grayItem {
+  background-color: gray;
+  color: whitesmoke;
+}
+#topMenu .whiteItem {
+  background-color: whitesmoke;
+  color: gray;
+}
+#topMenu .playListItem:hover {
+  color: pink;
+}
+#topMenu .playListItem div {
+  width: 90%;
 }
 </style>
