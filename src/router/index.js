@@ -4,18 +4,19 @@ import mainView from '../components/mainView.vue'
 import aboutMe from '../components/aboutMe.vue'
 import photos from '../components/photos.vue'
 import thanks from '../components/thanks.vue'
+import mobileMainView from '../components/mobile/mobileMainView.vue'
+import mobileAboutMe from '../components/mobile/mobileAboutMe.vue'
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/home',
-      name: 'home',
+      path: '/',
       component: mainView
     },
     {
-      path: '/',
+      path: '/home',
       component: mainView
     },
     {
@@ -29,6 +30,14 @@ export default new Router({
     {
       path: '/thanks',
       component: thanks
+    },
+    {
+      path: '/mobile',
+      component: mobileMainView
+    },
+    {
+      path: '/mobileaboutme',
+      component: mobileAboutMe
     }
   ]
 })

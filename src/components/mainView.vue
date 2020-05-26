@@ -15,15 +15,13 @@
     <div class="counter">
       不支持部分老式浏览器
       <br />
-      中国时间：{{date}}
+      <a href="http://www.shijian.cc/shiqu/156/" target="view_window">中国时间：{{date}}</a>
     </div>
     <div class="contact">
       <a href="mailto:1822157830@qq.com?subject=反馈：">联系方式：1822157830@qq.com</a>
       <br />
       <router-link to="/thanks" target="view_window">
-        <a>
-          <div>感谢</div>
-        </a>
+        <a>感谢</a>
       </router-link>
     </div>
     <div class="logoBox">
@@ -187,6 +185,10 @@ export default {
   color: #aaaaaa;
   line-height: 20px;
   text-align: right;
+}
+.contact a {
+  float: right;
+  margin-left: 5px;
 }
 .name {
   width: 200px;

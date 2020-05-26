@@ -1,5 +1,5 @@
 <template>
-  <div id="aboutMe">
+  <div id="thanks">
     <div class="content">
       <div class="coverImg" :style="{backgroundPositionY:(scroll/2-100)+'px'}"></div>
       <h1>感谢大佬们的文章和视频</h1>
@@ -169,6 +169,24 @@
                 target="view-window"
               >许杨淼淼 《网页嵌入Bilibili HTML5视频播放》</a>
             </li>
+            <li>
+              <a
+                href="https://blog.csdn.net/ws19900201/article/details/103906950"
+                target="view-window"
+              >幽幽靖 《vue之自动识别设备为移动端或pc端跳转链接、PC端打开手机版网页自动跳转至PC链接、移动端打开PC链接自动跳转至移动端链接》</a>
+            </li>
+            <li>
+              <a
+                href="https://www.cnblogs.com/Leophen/p/11265833.html"
+                target="view-window"
+              >Leophen 《Vue路由实现页面跳转的两种方式（router-link和JS）》</a>
+            </li>
+            <li>
+              <a
+                href="https://blog.csdn.net/elichan/article/details/78285838"
+                target="view-window"
+              >elichan 《p标签实现自动换行》</a>
+            </li>
           </ol>
         </div>
       </div>
@@ -177,12 +195,9 @@
 </template>
 
 <script>
-import topMenu from "./topMenu";
 export default {
-  name: "aboutMe",
-  components: {
-    topMenu
-  },
+  name: "thanks",
+  components: {},
   data() {
     return {
       msg: "个人简介",
@@ -202,14 +217,13 @@ export default {
 </script>
 
 <style scoped>
-#aboutMe {
+#thanks {
   height: 2000px;
   background-color: rgb(255, 245, 247);
   font-family: "仿宋";
   background: url("../../static/img/snow.jpg") right center fixed no-repeat;
   background-size: auto 100%;
   width: 100%;
-  min-width: 800px;
 }
 .content {
   width: 1024px;

@@ -6,7 +6,12 @@
       </div>
       <div class="board">
         <div class="innerBoard">
-          <iframe width="100%" height="1000px" scrolling="no" src="../../static/media/files/CV.pdf"></iframe>
+          <iframe
+            width="100%"
+            height="1000px"
+            scrolling="no"
+            src="../../../static/media/files/CV.pdf"
+          ></iframe>
         </div>
       </div>
     </div>
@@ -14,12 +19,9 @@
 </template>
 
 <script>
-import topMenu from "./topMenu";
 export default {
   name: "aboutMe",
-  components: {
-    topMenu
-  },
+  components: {},
   data() {
     return {
       msg: "个人简介",

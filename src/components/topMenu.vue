@@ -317,6 +317,7 @@ export default {
         this.switchMusic(this.musicIndex);
       } else {
         this.musicIndex = (this.musicIndex + 1) % this.arr.length;
+        this.switchMusic(this.musicIndex);
       }
     },
     previousMusic: function() {
@@ -405,17 +406,19 @@ export default {
     },
     changePlayIcon: function() {
       var button = document.getElementById("playPause");
-      if (this.onPlayButton) {
-        if (!this.musicPlaying) {
-          button.src = "../../static/img/startC.png";
+      if (button != null) {
+        if (this.onPlayButton) {
+          if (!this.musicPlaying) {
+            button.src = "../../static/img/startC.png";
+          } else {
+            button.src = "../../static/img/pauseC.png";
+          }
         } else {
-          button.src = "../../static/img/pauseC.png";
-        }
-      } else {
-        if (!this.musicPlaying) {
-          button.src = "../../static/img/start.png";
-        } else {
-          button.src = "../../static/img/pause.png";
+          if (!this.musicPlaying) {
+            button.src = "../../static/img/start.png";
+          } else {
+            button.src = "../../static/img/pause.png";
+          }
         }
       }
     }

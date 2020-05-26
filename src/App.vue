@@ -9,21 +9,24 @@
     onselect="document.selection.empty()"
   >
     <home></home>
-    <webFooter></webFooter>
   </div>
 </template>
 <script>
 import home from "./components/home";
-import webFooter from "./components/footer";
 export default {
   name: "app",
   data() {
     return {};
   },
   components: {
-    home,
-    webFooter
-  },
-  mounted() {}
+    home
+  }
 };
 </script>
+<style>
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+</style>
