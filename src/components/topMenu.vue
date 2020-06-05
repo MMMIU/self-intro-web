@@ -5,9 +5,10 @@
         class="leftmenulogo"
         src="../../static/img/leftmenulogo.png"
         alt="M"
-        :class="{'light':lightOn}"
+        :class="{'light':leftMenuPanelStatus}"
         ondragstart="return false"
         onselectstart="return false"
+        @click="displayLeftMenuPanel"
       />
       <div
         class="leftMenuPanel"
@@ -177,7 +178,7 @@ export default {
       innerHeight: window.innerHeight,
       leftMenuPanelHeight: 0,
       leftMenuPanelPosition: -205,
-      lightOn: false,
+      leftMenuPanelStatus: false,
       previousMusicIndex: 0,
       musicIndex: 0,
       arr: [""],
@@ -191,11 +192,17 @@ export default {
   methods: {
     pullLeftMenuPanel: function() {
       this.leftMenuPanelPosition = 0;
-      this.lightOn = true;
+      this.leftMenuPanelStatus = true;
     },
     foldLeftMenuPanel: function() {
       this.leftMenuPanelPosition = -205;
-      this.lightOn = false;
+      this.leftMenuPanelStatus = false;
+    },
+    displayLeftMenuPanel: function() {
+      this.leftMenuPanelStatus = !this.leftMenuPanelStatus;
+      if (!this.leftMenuPanelStatus) {
+        this.foldLeftMenuPanel();
+      }
     },
     windowResize: function() {
       const that = this;

@@ -43,9 +43,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     },
-    historyApiFallback: {
-      index: '/index.html'//index.html为当前目录创建的template.html
-    }
+    // historyApiFallback: {
+    //   index: '/index.html'//index.html为当前目录创建的template.html
+    // }
   },
   plugins: [
     new webpack.DefinePlugin({

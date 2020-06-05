@@ -27,6 +27,11 @@
                     <div>关于我</div>
                   </a>
                 </router-link>
+                <router-link to="/mobilethanks" target="view_window">
+                  <a>
+                    <div>感谢</div>
+                  </a>
+                </router-link>
               </li>
             </ul>
           </div>
@@ -59,7 +64,7 @@ export default {
   },
   methods: {
     displayMobileMenuPanel: function() {
-      this.mobileMenuPanelStatus =  ！this.mobileMenuPanelStatus;
+      this.mobileMenuPanelStatus = !this.mobileMenuPanelStatus;
     },
     menuPanel: function(data) {
       this.mobileMenuPanelStatus = !this.mobileMenuPanelStatus && data;

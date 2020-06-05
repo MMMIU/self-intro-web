@@ -6,6 +6,7 @@ import photos from '../components/photos.vue'
 import thanks from '../components/thanks.vue'
 import mobileMainView from '../components/mobile/mobileMainView.vue'
 import mobileAboutMe from '../components/mobile/mobileAboutMe.vue'
+import mobileThanks from '../components/mobile/mobileThanks.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -38,6 +39,10 @@ export default new Router({
     {
       path: '/mobileaboutme',
       component: mobileAboutMe
+    },
+    {
+      path: '/mobilethanks',
+      component: mobileThanks
     }
   ]
 })

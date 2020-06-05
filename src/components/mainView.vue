@@ -11,6 +11,14 @@
           :style="{backgroundImage: 'url(' + covers[index] + ')',height:(totalHeight - 100)+'px',backgroundPositionY:(scroll/2)+'px'}"
         ></div>
       </transition>
+      <transition name="fade2">
+        <div class="autoPlayOff" v-show="autoPlayOffStatus">自动图片切换已关闭</div>
+      </transition>
+      <div class="arrow leftArrow" @click="changeImg(index==0?covers.length-1:index-1),arrowUsed()"></div>
+      <div
+        class="arrow rightArrow"
+        @click="changeImg(index==covers.length-1?0:index+1),arrowUsed()"
+      ></div>
     </div>
     <div class="counter">
       不支持部分老式浏览器
@@ -45,7 +53,9 @@ export default {
       index2: 0,
       covers: [""],
       show: false,
-      firstTime: true
+      firstTime: true,
+      useTimer: true,
+      autoPlayOffStatus: false
     };
   },
   methods: {
@@ -54,20 +64,31 @@ export default {
         document.documentElement.scrollTop || document.body.scrollTop;
     },
     timer: function() {
-      setInterval(() => {
+      var timeTen = setInterval(() => {
         this.firstTime = false;
-        this.changeImg(this.index);
+        if (this.useTimer) {
+          this.changeImg((this.index + 1) % this.covers.length);
+        }
       }, 10000);
     },
-    changeImg: function() {
+    changeImg: function(index) {
       this.show = false;
       this.index2 = this.index;
-      this.index = (this.index + 1) % this.covers.length;
+      this.index = index;
       setTimeout(() => {
         this.show = true;
       }, 100);
       let preload = new Image();
       preload.src = this.covers[(this.index + 1) % this.covers.length];
+    },
+    arrowUsed: function() {
+      if (this.useTimer) {
+        this.autoPlayOffStatus = true;
+        setTimeout(() => {
+          this.autoPlayOffStatus = false;
+        }, 3000);
+      }
+      this.useTimer = false;
     },
     realtime: function() {
       const that = this;
@@ -158,6 +179,43 @@ export default {
   margin: -50px 0;
   min-width: 800px;
 }
+.arrow {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  margin-top: -20px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.rightArrow {
+  right: 10px;
+  background-image: url("../../static/img/arrowRight.png");
+}
+.leftArrow {
+  left: 10px;
+  background-image: url("../../static/img/arrowLeft.png");
+}
+.rightArrow:hover {
+  background-image: url("../../static/img/arrowRightC.png");
+}
+.leftArrow:hover {
+  background-image: url("../../static/img/arrowLeftC.png");
+}
+.autoPlayOff {
+  width: 200px;
+  height: 50px;
+  background-color: whitesmoke;
+  position: fixed;
+  top: 50px;
+  left: calc(50% - 100px);
+  box-shadow: 0px 0px 5px #888888;
+  text-align: center;
+  line-height: 50px;
+}
 .myLogo {
   width: 100px;
   height: 100px;
@@ -223,6 +281,19 @@ a:hover {
 }
 .fade-enter {
   transform: translateY(45px);
+  opacity: 0;
+}
+.fade2-enter-active {
+  transition: all 0.5s ease;
+}
+.fade2-leave-active {
+  transition: all 0.5s ease;
+}
+.fade2-enter {
+  transform: translateY(45px);
+  opacity: 0;
+}
+.fade2-leave-to {
   opacity: 0;
 }
 </style>

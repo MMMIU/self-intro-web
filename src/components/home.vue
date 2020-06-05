@@ -35,23 +35,37 @@ export default {
       }
     },
     linktab: function() {
-      let goUrl = this.isMobile();
-      if (goUrl && this.pc) {
-        this.pc = false;
-        this.$router.push({ path: "/mobile" });
-      } else if (!goUrl && !this.pc) {
-        this.pc = true;
-        this.$router.push({ path: "/home" });
+      let goMobile = this.isMobile();
+      if (goMobile && this.pc) {
+        this.$router.push({ path: "/mobile" }).catch(err => {
+          err;
+        });
+      } else if (!goMobile && !this.pc) {
+        this.$router.push({ path: "/home" }).catch(err => {
+          err;
+        });
       }
     },
     isMobile: function() {
       return navigator.userAgent.match(
         /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
       );
+    },
+    setPC: function() {
+      var s = window.location.href;
+      var tmp = s.split("/");
+      var page = tmp[tmp.length - 1];
+      if (page == "home") {
+        this.pc = true;
+      }
+      if (page == "mobile") {
+        this.pc = false;
+      }
     }
   },
   mounted() {
     this.linktab();
+    this.setPC();
   },
   watch: {}
 };

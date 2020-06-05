@@ -1,7 +1,6 @@
 <template>
-  <div id="thanks">
+  <div id="mobileThanks">
     <div class="content">
-      <div class="coverImg" :style="{backgroundPositionY:(scroll/2-100)+'px'}"></div>
       <h1>感谢大佬们的文章和视频</h1>
       <div class="dotLine dotLine1"></div>
       <div class="board">
@@ -202,7 +201,7 @@
 
 <script>
 export default {
-  name: "thanks",
+  name: "mobileThanks",
   components: {},
   data() {
     return {
@@ -223,31 +222,22 @@ export default {
 </script>
 
 <style scoped>
-#thanks {
-  height: 2000px;
+#mobileThanks {
+  height: 1500px;
   background-color: rgb(255, 245, 247);
   font-family: "仿宋";
-  background: url("../../static/img/snow.jpg") right center fixed no-repeat;
-  background-size: auto 100%;
   width: 100%;
 }
 .content {
-  width: 1024px;
-  height: 90%;
+  padding-top: 50px;
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
 }
 .content h1 {
   font-weight: 100;
   line-height: 40px;
   margin: 10px auto auto 10px;
-}
-.coverImg {
-  margin-top: 46px;
-  width: 100%;
-  height: 200px;
-  background-image: url("../../static/img/DVA.png");
-  background-repeat: no-repeat;
-  background-size: 110% auto;
 }
 .dotLine {
   border: none;
